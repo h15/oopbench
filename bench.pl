@@ -3,7 +3,7 @@
 # Benchmark the performance of various packages that implement support for OOP
 # in Perl.
 
-use 5.010;
+use 5.014;
 use common::sense;
 use Benchmark qw(:all);
 
@@ -13,6 +13,7 @@ use oop::moose;
 use oop::moose_sig;
 use oop::moosex;
 use oop::moosex_sig;
+use oop::pony;
 
 my $procedural;
 my $vanilla;
@@ -20,6 +21,7 @@ my $moose;
 my $moose_sig;
 my $moosex;
 my $moosex_sig;
+my $pony;
 my $prop;
 
 my %new_tests =
@@ -27,7 +29,8 @@ my %new_tests =
      moose      => sub { $moose = oop::moose->new(name => 'moose') },
      moose_sig  => sub { $moose_sig = oop::moose_sig->new(name => 'moose_sig') },
      moosex     => sub { $moosex = oop::moosex->new(name => 'moosex') },
-     moosex_sig => sub { $moosex_sig = oop::moosex_sig->new(name => 'moosex_sig') });
+     moosex_sig => sub { $moosex_sig = oop::moosex_sig->new(name => 'moosex_sig') },
+     pony       => sub { $pony = oop::pony->new(name => 'pony') });
 
 my %call_tests =
     (vanilla    => sub { $vanilla->run() },
@@ -35,7 +38,8 @@ my %call_tests =
      moose_sig  => sub { $moose_sig->run() },
      moosex     => sub { $moosex->run() },
      moosex_sig => sub { $moosex_sig->run() },
-     direct     => sub { workload->run() });
+     direct     => sub { workload->run() },
+     pony       => sub { $pony->run() });
 
 my %call_tests_arg1 =
     (vanilla    => sub { $vanilla->run_arg1(5) },
@@ -43,7 +47,8 @@ my %call_tests_arg1 =
      moose_sig  => sub { $moose_sig->run_arg1(5) },
      moosex     => sub { $moosex->run_arg1(5) },
      moosex_sig => sub { $moosex_sig->run_arg1(5) },
-     direct     => sub { workload->run_arg1(5) });
+     direct     => sub { workload->run_arg1(5) },
+     pony       => sub { $pony->run_arg1(5) });
 
 my %prop_tests =
     (vanilla    => sub { $prop = scalar $vanilla->result() },
@@ -51,7 +56,8 @@ my %prop_tests =
      moose_sig  => sub { $prop = scalar $moose_sig->result() },
      moosex     => sub { $prop = scalar $moosex->result() },
      moosex_sig => sub { $prop = scalar $moosex_sig->result() },
-     direct     => sub { $prop = scalar $vanilla->{result} });
+     direct     => sub { $prop = scalar $vanilla->{result} },
+     pony       => sub { $prop = scalar $pony->result });
 
 say "testing new...";
 cmpthese(0, \%new_tests);
